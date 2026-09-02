@@ -34,3 +34,18 @@ def add_task(payload: TaskCreate):
     task = Task(id=str(uuid4()), title=payload.title, complited=False)
     tasks.append(task)
     return task
+
+book = ''
+
+class FavoriteBook(BaseModel):
+    book_name: str
+
+@app.get('/book')
+def get_favorite_book():
+    return f'Любимая книга: {book}'
+
+@app.post('/book', response_model=FavoriteBook, status_code=status.HTTP_201_CREATED)
+def add_favorite_book(payload: FavoriteBook):
+    global book
+    book = payload.book_name
+    return payload
