@@ -27,6 +27,9 @@ class TaskService:
     def update_task(self, task_id: str, payload: TaskUpdate) -> TaskRead:
         task = self.repository.get_by_id(task_id)
 
+        if task is None:
+            raise TaskNotFoundError(task_id)
+
         if payload.title is not None:
             task.title = payload.title
         if payload.completed is not None:
@@ -37,6 +40,9 @@ class TaskService:
 
     def delete_task(self, task_id: str) -> None:
         task = self.repository.get_by_id(task_id)
+
+        if task is None:
+            raise TaskNotFoundError(task_id)
 
         self.repository.delete(task)
         self.db.commit()
